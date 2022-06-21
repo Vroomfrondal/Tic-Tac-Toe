@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Cell from '../Cell'
+import Cell from './Cell'
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('x')
