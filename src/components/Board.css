@@ -1,20 +1,23 @@
-.game-header {
+/* Start Game Header Styling */
+.game_header {
+  padding-top: 6rem;
   display: flex;
   justify-content: center;
-  padding-bottom: 1rem; /* top, right, bottom, left */
+  padding-bottom: 1rem;
 }
 
-.current-move-message {
+.current_move_message {
   color: #fff;
   font-size: 1.5rem;
   padding-right: 1rem;
 }
 
-.game-reset-button {
+.game_reset_button {
   font-size: 0.9em;
 }
 
-.game-board {
+/* Start Board Styling */
+.game_board {
   display: flex;
   justify-content: center;
   align-items: center;

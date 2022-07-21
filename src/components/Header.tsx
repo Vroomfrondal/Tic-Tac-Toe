@@ -4,8 +4,10 @@ import './Header.css'
 function Header() {
   return (
     <>
-      <div className="test">Tic Tac Toe header</div>
-      <div>X goes first.</div>
+      <div className="header_container">
+        <span className="title">Tic-Tac-Toe!</span>
+        <span>-Click a square to start playing-</span>
+      </div>
     </>
   )
 }

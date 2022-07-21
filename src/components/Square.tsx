@@ -1,18 +1,16 @@
 import React, { useState } from 'react'
 import './Square.css'
 
-const Square = ({ num }: any) => {
-  const handlePlayerClick = (num: any) => {
-    alert(num)
-  }
-
+const Square = ({ num = 0, className = '' }) => {
   return (
     <div
-      className="square"
+      className={className}
       onClick={() => {
-        handlePlayerClick(num)
+        alert(num)
       }}
-    ></div>
+    >
+      <span className="XO_playermove">X</span>
+    </div>
   )
 }
 
