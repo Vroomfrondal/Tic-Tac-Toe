@@ -1,0 +1,34 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: 'Edu VIC WA NT Beginner', cursive;
+}
+
+html {
+  height: 100vh;
+  background-color: #3a486e;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.header_container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: fit-content;
+  width: fit-content;
+  margin-top: -0.5rem;
+  padding: 3rem 3rem 3rem 1rem; /* top, right, bottom, left */
+  color: #fff;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+}
+
+.title {
+  font-size: 2rem;
+}

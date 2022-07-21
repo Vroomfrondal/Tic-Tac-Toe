@@ -1,0 +1,65 @@
+.square,
+.left_column_top,
+.left_column_middle,
+.left_column_bottom,
+.center_column_top,
+.center_column_middle,
+.center_column_bottom,
+.right_column_top,
+.right_column_middle,
+.right_column_bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 200px;
+  border: 2.5px solid #66759b;
+  border-radius: 0.5rem;
+}
+
+.square:hover {
+  transition: 0.2s;
+  background-color: #2d3f52;
+}
+
+.XO_playermove {
+  font-size: 5rem;
+}
+
+/* Left Column Styling */
+.left_column_top {
+  border-left: none;
+  border-top: none;
+}
+
+.left_column_middle {
+  border-left: none;
+}
+
+.left_column_bottom {
+  border-left: none;
+  border-bottom: none;
+}
+
+/* Center Column Styling */
+.center_column_top {
+  border-top: none;
+}
+
+.center_column_bottom {
+  border-bottom: none;
+}
+
+/* Right Column Styling */
+.right_column_top {
+  border-top: none;
+  border-right: none;
+}
+.right_column_middle {
+  border-right: none;
+}
+
+.right_column_bottom {
+  border-right: none;
+  border-bottom: none;
+}

@@ -1,0 +1,31 @@
+/* Start Game Header Styling */
+.game_header {
+  padding-top: 6rem;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
+.current_move_message {
+  color: #fff;
+  font-size: 1.5rem;
+  padding-right: 1rem;
+}
+
+.game_reset_button {
+  font-size: 0.9em;
+}
+
+/* Start Board Styling */
+.game_board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  background-color: #34495e;
+  border: 10px solid #2c3e50;
+  border-radius: 10px;
+  color: #fff;
+}
