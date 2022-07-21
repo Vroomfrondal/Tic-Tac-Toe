@@ -1,0 +1,17 @@
+/*  CSS Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#root {
+  height: 100vh;
+  background-color: #3a486e;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}

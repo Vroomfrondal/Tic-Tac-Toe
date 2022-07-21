@@ -1,37 +1,42 @@
 import React, { useState } from 'react'
-import Cell from './Cell'
+import Square from './Square'
+import './Board.css'
 
 const Board = () => {
-  const [playerTurn, setPlayerTurn] = useState('x')
+  const [playerTurn, setPlayerTurn] = useState('X')
 
   const determineTurn = () => {
-    if (playerTurn === 'x') setPlayerTurn((prevTurn: any) => (prevTurn = 'o'))
-    else setPlayerTurn((prevTurn: any) => (prevTurn = 'x'))
+    if (playerTurn === 'X') setPlayerTurn((prevTurn: any) => (prevTurn = 'O'))
+    else setPlayerTurn((prevTurn: any) => (prevTurn = 'X'))
   }
 
   return (
-    <div className="container">
-      <table>
-        Current Move: {playerTurn}
-        <tbody>
-          <tr>
-            <Cell num={1} />
-            <Cell num={2} />
-            <Cell num={3} />
-          </tr>
-          <tr>
-            <Cell num={4} />
-            <Cell num={5} />
-            <Cell num={6} />
-          </tr>
-          <tr>
-            <Cell num={7} />
-            <Cell num={8} />
-            <Cell num={9} />
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <>
+      <section className="game-header">
+        <span className="current-move-message">Current Move: {playerTurn}</span>
+        <button className="game-reset-button" id="game_reset_button">
+          Reset Game
+        </button>
+      </section>
+
+      <section className="game-board">
+        <div className="column">
+          <Square num={1} />
+          <Square num={2} />
+          <Square num={3} />
+        </div>
+        <div className="column">
+          <Square num={4} />
+          <Square num={5} />
+          <Square num={6} />
+        </div>
+        <div className="column">
+          <Square num={7} />
+          <Square num={8} />
+          <Square num={9} />
+        </div>
+      </section>
+    </>
   )
 }
 

@@ -1,0 +1,12 @@
+.square {
+  display: block;
+  height: 200px;
+  width: 200px;
+  border: 2.5px solid #66759b;
+  border-radius: 0.5rem;
+}
+
+.square:hover {
+  transition: 0.2s;
+  background-color: #2d3f52;
+}

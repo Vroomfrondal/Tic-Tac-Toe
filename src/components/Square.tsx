@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
+import './Square.css'
 
-const Cell = ({ num }: { num: any }) => {
+const Square = ({ num }: any) => {
   const handlePlayerClick = (num: any) => {
     alert(num)
   }
 
   return (
-    <td
+    <div
+      className="square"
       onClick={() => {
         handlePlayerClick(num)
       }}
-    >
-      -
-    </td>
+    ></div>
   )
 }
 
-export default Cell
+export default Square

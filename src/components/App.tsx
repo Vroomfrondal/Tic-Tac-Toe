@@ -1,9 +1,14 @@
 import React from 'react'
+import Header from './Header'
 import Board from './Board'
-import './Board.css'
 
 function App() {
-  return <Board />
+  return (
+    <>
+      <Header />
+      <Board />
+    </>
+  )
 }
 
 export default App
