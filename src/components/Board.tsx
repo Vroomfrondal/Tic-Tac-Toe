@@ -3,6 +3,8 @@ import Square from './Square'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
+// ? Board moves as object?
+
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
@@ -10,32 +12,41 @@ const Board = () => {
 
   const handlePlayerClick = () => {
     // Update Players Turn
-    if (playerTurn === 'X')
+    if (playerTurn === 'X' && boardMoves.length < 9)
       setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
     else setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
 
     // Update Previous Player Turn
-    if (prevPlayerTurn === 'X')
-      setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-    else setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+    if (prevPlayerTurn === 'O' && boardMoves.length < 9)
+      setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+    else setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
 
-    // Add to game history
+    // Update Game History
     if (boardMoves.length <= 9) {
-      setBoardMoves((prevArr) => [...prevArr, prevPlayerTurn])
+      setBoardMoves((prevMovesArr) => [...prevMovesArr, prevPlayerTurn])
       console.log(`Board Moves: [${boardMoves}]`)
-    } else alert('Game Over. Click restart button')
+    } else alert('Game Over. Click restart button.')
   }
 
   const resetGame = () => {
-    setBoardMoves(['X'])
-    setPlayerTurn('X')
+    setPlayerTurn((prevTurn) => (prevTurn = 'X'))
+    setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
+    setBoardMoves((prevMovesArr) => (prevMovesArr = ['X']))
+    console.warn(`** Board history cleared **`)
   }
+
+  // Live Game Info for Debugging
+  // console.log(
+  //   `Current Turn: "${playerTurn}"`,
+  //   ',',
+  //   `Previous Turn: "${prevPlayerTurn}"`
+  // )
 
   return (
     <>
       <section className="game_header">
         <span className="current_move_message">Current Move: {playerTurn}</span>
-        <button className="game_reset_button" onClick={resetGame}>
+        <button type="reset" className="game_reset_button" onClick={resetGame}>
           Reset Game
         </button>
       </section>
