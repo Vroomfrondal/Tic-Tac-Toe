@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import './Square.css'
 
-const Square = ({ num = 0, className = 'square', children, onClick }: any) => {
-  // TODO: We will need state keeping track of individual square's clicked state
+const Square = ({ className = '', children, onClick }: any) => {
   return (
-    <div className={className} onClick={onClick}>
+    <div onClick={onClick} className={className}>
       <span className="XO_playermove">{children}</span>
     </div>
   )
