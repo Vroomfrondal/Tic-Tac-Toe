@@ -17,7 +17,16 @@
   border-radius: 0.5rem;
 }
 
-.square:hover {
+.square:hover,
+.left_column_top:hover,
+.left_column_middle:hover,
+.left_column_bottom:hover,
+.center_column_top:hover,
+.center_column_middle:hover,
+.center_column_bottom:hover,
+.right_column_top:hover,
+.right_column_middle:hover,
+.right_column_bottom:hover {
   transition: 0.2s;
   background-color: #2d3f52;
 }
