@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Square from './Square'
 import './Board.css'
 import { sleep } from '../utils/sleep'
@@ -6,7 +6,7 @@ import { sleep } from '../utils/sleep'
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
-  const [boardMoves, setBoardMoves] = useState<string[]>([
+  const [gameHistory, setGameHistory] = useState<string[]>([
     '',
     '',
     '',
@@ -18,7 +18,7 @@ const Board = () => {
     '',
   ])
 
-  const handlePlayerClick = (e: any, squareIndex: any) => {
+  const handlePlayerClick = (e: any, squareIndex: number) => {
     // Update Players Turn
     playerTurn === 'X'
       ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
@@ -37,28 +37,35 @@ const Board = () => {
 
     // Draw Player move on board
     console.log(`Square clicked: ${squareIndex}`)
-    e.target.innerText = playerTurn
+    e.target.innerHTML = playerTurn
   }
 
   const resetGame = () => {
+    // Reset Player and Game History States
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
     setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
-    // setBoardMoves((prevMovesArr) => (prevMovesArr = ['X']))
+    setGameHistory(
+      (prevMovesArr) => (prevMovesArr = ['', '', '', '', '', '', '', '', ''])
+    )
+
+    // Clear X's and O's rendered on DOM
+    const boardMarks = document.querySelectorAll('#player-mark')
+    boardMarks.forEach((element) => (element.innerHTML = ''))
+
     console.warn(`** Board history cleared **`)
   }
 
-  // Live Game Info for Debugging
-  // console.log(
-  //   `Current Turn: "${playerTurn}"`,
-  //   ',',
-  //   `Previous Turn: "${prevPlayerTurn}"`
-  // )
+  const undoPreviousMove = () => {}
+
+  // TODO: useEffect will need to listen for win condition
+  // TODO: win condition
+  // TODO: prevent element that has been clicked from being reclicked
 
   return (
     <>
       <section className="game_header">
         <span className="current_move_message">Current Move: {playerTurn}</span>
-        <button type="reset" className="game_reset_button" onClick={resetGame}>
+        <button type="reset" className="game_header_button" onClick={resetGame}>
           Reset Game
         </button>
       </section>
@@ -78,6 +85,7 @@ const Board = () => {
             className="left_column_bottom"
           />
         </div>
+
         <div className="column_center">
           <Square
             onClick={(e: any) => handlePlayerClick(e, 3)}
@@ -92,6 +100,7 @@ const Board = () => {
             className="center_column_bottom"
           />
         </div>
+
         <div className="column_right">
           <Square
             onClick={(e: any) => handlePlayerClick(e, 6)}
