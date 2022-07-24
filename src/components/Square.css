@@ -15,6 +15,7 @@
   width: 200px;
   border: 2.5px solid #66759b;
   border-radius: 0.5rem;
+  font-size: 5rem;
 }
 
 .square:hover,
@@ -29,10 +30,6 @@
 .right_column_bottom:hover {
   transition: 0.2s;
   background-color: #2d3f52;
-}
-
-.XO_playermove {
-  font-size: 5rem;
 }
 
 /* Left Column Styling */
