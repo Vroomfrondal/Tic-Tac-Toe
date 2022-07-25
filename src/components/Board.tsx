@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Square from './Square'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
 // TODO: win condition? (use useEffect)
+// TODO: useRef for game board
 // TODO: prevent element that has been clicked from being ovewritten
 // TODO: Bot as player 2?
 
@@ -11,23 +12,28 @@ const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
   const [gameHistory, setGameHistory] = useState<string[]>([])
-  console.log(`Global Game History: [${gameHistory}]`)
+  console.log(`Game History: [${gameHistory}]`)
 
   const handlePlayerMove = (e: any, squareClicked: number) => {
-    // Update Players Turn
-    playerTurn === 'X'
-      ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-      : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+    if (gameHistory.length < 9) {
+      // Update Players Turn
+      playerTurn === 'X'
+        ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
+        : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
 
-    // Update Previous Player Turn
-    prevPlayerTurn === 'O'
-      ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-      : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
+      // Update Previous Player Turn
+      prevPlayerTurn === 'O'
+        ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+        : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
 
-    // Update Game History & Draw on Board
-    setGameHistory((prevArr) => [...prevArr, playerTurn])
-    e.target.innerHTML = playerTurn
-    console.log(`Player clicked square: ${squareClicked}`)
+      // Update Game History & Draw on Board
+      setGameHistory((prevArr) => [...prevArr, playerTurn])
+      e.target.innerHTML = playerTurn
+      e.target.setAttribute('moveID', gameHistory.length)
+
+      // console.log(`Player clicked square: ${squareClicked}`)
+    } else
+      console.warn('End of game. useEffect will listen for winner condition')
   }
 
   const resetGame = () => {
@@ -38,12 +44,15 @@ const Board = () => {
 
     // Clear X's and O's rendered on DOM
     const boardMarks = document.querySelectorAll('#player-mark')
-    boardMarks.forEach((element) => (element.innerHTML = ''))
+    boardMarks.forEach((element) => {
+      element.innerHTML = ''
+      element.removeAttribute('moveID')
+    })
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
-    if (gameHistory.length >= 1) {
+    if (gameHistory.length > 0) {
       // Undo Player Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
@@ -54,11 +63,19 @@ const Board = () => {
         ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
         : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
 
-      // TODO: REMOVE DOM FROM BOARD
       // Update Game History by filtering last move from array
       setGameHistory((prevArr) =>
         prevArr.filter((move, index) => index !== prevArr.length - 1)
       )
+
+      // Find most recently updated DOM Element moveID attribute and remove X or O from board
+      const lastMoveID = gameHistory.length - 1
+      const lastDomMarkOnBoard = Array.from(
+        document.querySelectorAll(`[moveID = "${lastMoveID}"]`)
+      )
+
+      lastDomMarkOnBoard[0].innerHTML = ''
+      lastDomMarkOnBoard[0].removeAttribute('moveID')
     } else console.warn('A player needs to make a move to undo!')
   }
 
