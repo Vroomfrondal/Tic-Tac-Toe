@@ -3,56 +3,69 @@ import Square from './Square'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: useRef for game board
-// TODO: Modal popups for restart game and win condition
+// TODO: Modal popup when gameOver state === true
 
-// TODO: Fancy effects: hover X or O on board?
-// TODO: shake board briefly if user tries clicking spot that's already taken
+// TODO: Fancy effects: show playerTurn X or O when hovering square
+// TODO: Display Game History
 // TODO: Bot as player 2?
+// TODO: <section> element for players to see live-status of game like in browser console
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
   const [gameHistory, setGameHistory] = useState<string[]>([])
-  const [gameOver, setGameOver] = useState(false)
+  const [falseInput, setFalseInput] = useState(false)
+  const [gameOver, setGameOver] = useState(false) // ! MODAL POPup
 
   // Win Condition
   useEffect(() => {
-    // Loop over possible DOM marks and win conditions to check if index of previous moves matches any index of possible win combinations
+    // Return true and set gameOver state if any board marks combo matches possible winCondition combo
     const boardMarks = document.querySelectorAll('#player-mark')
     const xWins = winConditions.some((condition) => {
       return condition.every((index) => {
         return boardMarks[index].innerHTML === 'X'
       })
     })
-
     const oWins = winConditions.some((condition) => {
       return condition.every((index) => {
         return boardMarks[index].innerHTML === 'O'
       })
     })
 
-    if (xWins || oWins) console.warn('A player won')
+    if (xWins || oWins) {
+      console.warn('A player won')
+      setGameOver((oldStatus) => (oldStatus = true))
+    }
   }, [gameHistory])
 
+  // Shake Screen on False input (CSS)
+  useEffect(() => {
+    setTimeout(() => {
+      setFalseInput(false)
+    }, 1000)
+  }, [falseInput])
+
   const winConditions = [
-    [0, 3, 6], // top row
-    [0, 1, 2], // left column
+    [0, 3, 6], // Top row
+    [0, 1, 2], // Left column
     [0, 4, 8], // Diagonal starting top left
     [2, 4, 6], // Diagonal starting bottom left
     [1, 4, 7], // Center row
-    [3, 4, 5], // center column
-    [6, 7, 8], // right column
-    [2, 5, 8], // bottom row
+    [3, 4, 5], // Center column
+    [6, 7, 8], // Right column
+    [2, 5, 8], // Bottom row
   ]
 
-  const handlePlayerMove = (e: any, squareClicked: number) => {
-    // Has Square been previously clicked?
+  const handlePlayerMove = (e: any) => {
+    // Click Validation
     if (
       e.target.innerHTML !== 'X' &&
       e.target.innerHTML !== 'O' &&
       gameHistory.length < 9
     ) {
+      // Turn off shake screen class since we have valid input
+      setFalseInput((oldStatus) => (oldStatus = false))
+
       // Update Players Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
@@ -70,9 +83,9 @@ const Board = () => {
 
       // console.log(`Square Clicked: ${squareClicked}`)
     } else {
-      console.warn(
-        'Square Taken or max moves hit. Use Effect will listen for win condition'
-      )
+      // Enable shake scren class if user clicks occupied <Square>
+      const board = document.querySelector('.game_board')
+      if (board) setFalseInput(true)
     }
   }
 
@@ -131,48 +144,50 @@ const Board = () => {
         </button>
       </section>
 
-      <section className="game_board">
+      <section
+        className={falseInput ? 'game_board_when_input_error' : 'game_board'}
+      >
         <div className="column_left">
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 0)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="left_column_top"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 1)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="left_column_middle"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 2)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="left_column_bottom"
           />
         </div>
 
         <div className="column_center">
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 3)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="center_column_top"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 4)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="center_column_middle"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 5)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="center_column_bottom"
           />
         </div>
 
         <div className="column_right">
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 6)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="right_column_top"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 7)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="right_column_middle"
           />
           <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e, 8)}
+            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
             className="right_column_bottom"
           />
         </div>
