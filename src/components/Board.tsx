@@ -1,17 +1,50 @@
-import React, { useState, useRef, SyntheticEvent } from 'react'
+import React, { useState, useEffect, SyntheticEvent } from 'react'
 import Square from './Square'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: win condition? (use useEffect)
 // TODO: useRef for game board
+// TODO: Modal popups for restart game and win condition
+
+// TODO: Fancy effects: hover X or O on board?
+// TODO: shake board briefly if user tries clicking spot that's already taken
 // TODO: Bot as player 2?
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
   const [gameHistory, setGameHistory] = useState<string[]>([])
-  console.log(`Game History: [${gameHistory}]`)
+  const [gameOver, setGameOver] = useState(false)
+
+  // Win Condition
+  useEffect(() => {
+    // Loop over possible DOM marks and win conditions to check if index of previous moves matches any index of possible win combinations
+    const boardMarks = document.querySelectorAll('#player-mark')
+    const xWins = winConditions.some((condition) => {
+      return condition.every((index) => {
+        return boardMarks[index].innerHTML === 'X'
+      })
+    })
+
+    const oWins = winConditions.some((condition) => {
+      return condition.every((index) => {
+        return boardMarks[index].innerHTML === 'O'
+      })
+    })
+
+    if (xWins || oWins) console.warn('A player won')
+  }, [gameHistory])
+
+  const winConditions = [
+    [0, 3, 6], // top row
+    [0, 1, 2], // left column
+    [0, 4, 8], // Diagonal starting top left
+    [2, 4, 6], // Diagonal starting bottom left
+    [1, 4, 7], // Center row
+    [3, 4, 5], // center column
+    [6, 7, 8], // right column
+    [2, 5, 8], // bottom row
+  ]
 
   const handlePlayerMove = (e: any, squareClicked: number) => {
     // Has Square been previously clicked?
@@ -35,11 +68,12 @@ const Board = () => {
       e.target.innerHTML = playerTurn
       e.target.setAttribute('moveID', gameHistory.length)
 
-      console.log(e)
-    } else
+      // console.log(`Square Clicked: ${squareClicked}`)
+    } else {
       console.warn(
         'Square Taken or max moves hit. Use Effect will listen for win condition'
       )
+    }
   }
 
   const resetGame = () => {
