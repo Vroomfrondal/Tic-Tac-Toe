@@ -6,7 +6,7 @@
 }
 
 html {
-  height: 100vh;
+  height: 100%;
   background-color: #3a486e;
 }
 
@@ -18,12 +18,13 @@ body {
 .header_container {
   position: absolute;
   display: flex;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
   height: fit-content;
   width: fit-content;
   margin-top: -0.5rem;
-  padding: 3rem 3rem 3rem 1rem; /* top, right, bottom, left */
+  padding: 1.9rem 3rem 3rem 0rem; /* top, right, bottom, left */
   color: #fff;
   border-radius: 50%;
   transform: rotate(-25deg);
@@ -31,4 +32,16 @@ body {
 
 .title {
   font-size: 2rem;
+}
+
+/* Mobile-Device viewport */
+@media (min-width: 100px) and (max-width: 619px) {
+  .header_container {
+    /* border: 2px solid red; */
+    /* border-bottom: 2px solid #fff; */
+    width: 100%;
+    transform: none;
+    border-radius: 0;
+    padding: 1rem;
+  }
 }

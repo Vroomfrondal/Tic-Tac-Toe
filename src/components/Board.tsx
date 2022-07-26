@@ -8,6 +8,7 @@ import { sleep } from '../utils/sleep'
 // TODO: Fade Modal in CSS
 // TODO: Bot as player 2?
 // TODO: Footer
+// TODO: unbloat css squares
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')

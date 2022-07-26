@@ -69,3 +69,21 @@
   border-right: none;
   border-bottom: none;
 }
+
+/* Mobile-Device viewport */
+@media (min-width: 100px) and (max-width: 619px) {
+  .square,
+  .left_column_top,
+  .left_column_middle,
+  .left_column_bottom,
+  .center_column_top,
+  .center_column_middle,
+  .center_column_bottom,
+  .right_column_top,
+  .right_column_middle,
+  .right_column_bottom {
+    height: 120px;
+    width: 120px;
+    font-size: 4rem;
+  }
+}
