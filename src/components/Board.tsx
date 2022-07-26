@@ -1,21 +1,21 @@
 import React, { useState, useEffect, SyntheticEvent } from 'react'
 import Square from './Square'
+import Modal from './Modal'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: Modal popup when gameOver state === true
-
 // TODO: Fancy effects: show playerTurn X or O when hovering square
-// TODO: Display Game History
 // TODO: Bot as player 2?
 // TODO: <section> element for players to see live-status of game like in browser console
+// TODO: Footer
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
   const [gameHistory, setGameHistory] = useState<string[]>([])
   const [falseInput, setFalseInput] = useState(false)
-  const [gameOver, setGameOver] = useState(false) // ! MODAL POPup
+  const [gameOver, setGameOver] = useState(false)
+  const [modalOpenStatus, setModalOpenStatus] = useState(false)
 
   // Win Condition
   useEffect(() => {
@@ -34,9 +34,18 @@ const Board = () => {
 
     if (xWins || oWins) {
       console.warn('A player won')
-      setGameOver((oldStatus) => (oldStatus = true))
+      setGameOver((status) => (status = true))
+      setModalOpenStatus((status) => (status = true))
     }
   }, [gameHistory])
+
+  // Game-over
+  useEffect(() => {
+    if (gameOver === true) {
+      console.log('Game Over')
+      setModalOpenStatus((status) => (status = true))
+    } else console.log('Continuing....')
+  }, [gameOver])
 
   // Shake Screen on False input (CSS)
   useEffect(() => {
@@ -64,7 +73,7 @@ const Board = () => {
       gameHistory.length < 9
     ) {
       // Turn off shake screen class since we have valid input
-      setFalseInput((oldStatus) => (oldStatus = false))
+      setFalseInput((status) => (status = false))
 
       // Update Players Turn
       playerTurn === 'X'
@@ -80,12 +89,10 @@ const Board = () => {
       setGameHistory((prevArr) => [...prevArr, playerTurn])
       e.target.innerHTML = playerTurn
       e.target.setAttribute('moveID', gameHistory.length)
-
-      // console.log(`Square Clicked: ${squareClicked}`)
     } else {
       // Enable shake scren class if user clicks occupied <Square>
       const board = document.querySelector('.game_board')
-      if (board) setFalseInput(true)
+      if (board) setFalseInput((status) => (status = true))
     }
   }
 
@@ -94,6 +101,8 @@ const Board = () => {
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
     setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
     setGameHistory((prevArr) => (prevArr = []))
+    setGameOver((status) => (status = false))
+    setModalOpenStatus((status) => (status = false))
 
     // Clear X's and O's rendered on DOM
     const boardMarks = document.querySelectorAll('#player-mark')
@@ -106,6 +115,8 @@ const Board = () => {
 
   const undoMove = () => {
     if (gameHistory.length > 0) {
+      setGameOver((status) => (status = false))
+
       // Undo Player Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
@@ -191,6 +202,17 @@ const Board = () => {
             className="right_column_bottom"
           />
         </div>
+      </section>
+
+      <section>
+        <Modal
+          open={modalOpenStatus}
+          onClose={() => {
+            setModalOpenStatus(false)
+            resetGame()
+          }}
+          winner={prevPlayerTurn}
+        ></Modal>
       </section>
     </>
   )
