@@ -17,6 +17,7 @@ const Board = () => {
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
+  const [winner, setWinner] = useState('Draw')
 
   // Win Condition
   useEffect(() => {
@@ -34,18 +35,22 @@ const Board = () => {
     })
 
     if (xWins || oWins) {
-      console.warn('A player won')
       setGameOver((status) => (status = true))
       setModalOpenStatus((status) => (status = true))
+      setWinner((winner) => (winner = prevPlayerTurn))
+    }
+
+    // Draw
+    if (gameHistory.length === 9 && !xWins && !oWins) {
+      setGameOver((status) => (status = true))
+      setModalOpenStatus((status) => (status = true))
+      setWinner((winner) => (winner = 'Draw'))
     }
   }, [gameHistory])
 
   // Game-over
   useEffect(() => {
-    if (gameOver === true) {
-      console.log('Game Over')
-      setModalOpenStatus((status) => (status = true))
-    } else console.log('Continuing....')
+    if (gameOver === true) setModalOpenStatus((status) => (status = true))
   }, [gameOver])
 
   // Shake Screen on False input (CSS)
@@ -102,8 +107,10 @@ const Board = () => {
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
     setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
     setGameHistory((prevArr) => (prevArr = []))
+    setFalseInput((status) => (status = false))
     setGameOver((status) => (status = false))
     setModalOpenStatus((status) => (status = false))
+    setWinner((winner) => (winner = 'Draw'))
 
     // Clear X's and O's rendered on DOM
     const boardMarks = document.querySelectorAll('#player-mark')
@@ -212,7 +219,7 @@ const Board = () => {
             setModalOpenStatus(false)
             resetGame()
           }}
-          winner={prevPlayerTurn}
+          winner={winner}
         ></Modal>
       </section>
     </>
