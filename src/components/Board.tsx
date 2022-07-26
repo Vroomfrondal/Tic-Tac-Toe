@@ -4,9 +4,9 @@ import Modal from './Modal'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: Fancy effects: show playerTurn X or O when hovering square
+// TODO: Draw condition
+// TODO: Fade Modal in CSS
 // TODO: Bot as player 2?
-// TODO: <section> element for players to see live-status of game like in browser console
 // TODO: Footer
 
 const Board = () => {
@@ -19,7 +19,7 @@ const Board = () => {
 
   // Win Condition
   useEffect(() => {
-    // Return true and set gameOver state if any board marks combo matches possible winCondition combo
+    // Return true and update state if any marks on the board match possible winCondition combos
     const boardMarks = document.querySelectorAll('#player-mark')
     const xWins = winConditions.some((condition) => {
       return condition.every((index) => {
