@@ -1,9 +1,10 @@
 /* Start Game Header Styling */
 .game_header {
-  padding-top: 6rem;
+  padding-top: 3rem;
   display: flex;
   justify-content: center;
-  padding-bottom: 1rem;
+  align-items: center;
+  padding-bottom: 0.8rem;
 }
 
 .current_move_message {
@@ -17,6 +18,8 @@
   padding: 4px 10px;
   margin: 0px 2px 0px 2px;
   border: 2px solid #2c3e50;
+  height: fit-content;
+  width: 5.5rem;
 }
 
 .game_header_button:hover {
@@ -29,9 +32,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 600px;
-  height: 600px;
-  margin: auto;
+  max-width: 38em;
+  margin: 0 auto;
   background-color: #34495e;
   border: 10px solid #2c3e50;
   border-radius: 10px;
@@ -87,5 +89,27 @@
   }
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+/* Mobile-Device viewport */
+@media (min-width: 100px) and (max-width: 619px) {
+  .game_header {
+    padding-top: 6rem;
+  }
+
+  .current_move_message {
+    font-size: 1.4rem;
+  }
+
+  .game_board {
+    width: 370px;
+    height: 370px;
+    margin-top: 0.5em;
+  }
+
+  .game_board_when_input_error {
+    width: 370px;
+    height: 370px;
   }
 }
