@@ -5,7 +5,6 @@ import './Board.css'
 import { sleep } from '../utils/sleep'
 
 // TODO: Bot as player 2?
-// TODO: unbloat css squares
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
@@ -166,45 +165,45 @@ const Board = () => {
         <div className="column_left">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_top"
+            className="square left_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_middle"
+            className="square left_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_bottom"
+            className="square left_bottom"
           />
         </div>
 
         <div className="column_center">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_top"
+            className="square center_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_middle"
+            className="square center_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_bottom"
+            className="square center_bottom"
           />
         </div>
 
         <div className="column_right">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_top"
+            className="square right_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_middle"
+            className="square right_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_bottom"
+            className="square right_bottom"
           />
         </div>
       </section>

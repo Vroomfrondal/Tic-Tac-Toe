@@ -6,7 +6,7 @@ function Modal({ open, onClose, winner }: any) {
 
   let winMessage: string
   if (winner === 'X' || winner === 'O') winMessage = `${winner} Wins!`
-  else winMessage = "It's a draw!"
+  else winMessage = 'Draw!'
 
   return (
     <>
