@@ -4,6 +4,10 @@ import './Modal.css'
 function Modal({ open, onClose, winner }: any) {
   if (!open) return null
 
+  let winMessage: string
+  if (winner === 'X' || winner === 'O') winMessage = `${winner} Wins!`
+  else winMessage = 'Draw!'
+
   return (
     <>
       <div
@@ -16,8 +20,7 @@ function Modal({ open, onClose, winner }: any) {
           <button className="modal_reset_button" onClick={onClose}>
             Reset Game
           </button>
-          <span className="winner_text">{winner} Wins!</span>
-          <p></p>
+          <span className="winner_text">{winMessage}</span>
         </section>
       </div>
     </>

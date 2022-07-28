@@ -24,7 +24,7 @@ body {
   height: fit-content;
   width: fit-content;
   margin-top: -0.5rem;
-  padding: 1.9rem 3rem 3rem 0rem; /* top, right, bottom, left */
+  padding: 1.9rem 3rem 3rem 0rem;
   color: #fff;
   border-radius: 50%;
   transform: rotate(-25deg);
@@ -37,8 +37,6 @@ body {
 /* Mobile-Device viewport */
 @media (min-width: 100px) and (max-width: 619px) {
   .header_container {
-    /* border: 2px solid red; */
-    /* border-bottom: 2px solid #fff; */
     width: 100%;
     transform: none;
     border-radius: 0;

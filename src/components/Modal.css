@@ -24,6 +24,22 @@
   padding: 2rem;
   margin: auto;
   z-index: 1000;
+  animation-name: slidein;
+  animation-duration: 0.4s;
+}
+
+@keyframes slidein {
+  from {
+    margin-top: 100%;
+    min-width: 20rem;
+    max-width: 26rem;
+  }
+
+  to {
+    margin-top: 0%;
+    min-width: 20rem;
+    max-width: 26rem;
+  }
 }
 
 .modal_content {
@@ -49,4 +65,11 @@
 .winner_text {
   padding-top: 2.5rem;
   font-size: 3rem;
+}
+
+/* Mobile-Device viewport */
+@media (min-width: 100px) and (max-width: 619px) {
+  .modal {
+    width: 10rem;
+  }
 }

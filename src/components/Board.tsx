@@ -4,11 +4,7 @@ import Modal from './Modal'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: Draw condition
-// TODO: Fade Modal in CSS
 // TODO: Bot as player 2?
-// TODO: Footer
-// TODO: unbloat css squares
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
@@ -16,6 +12,7 @@ const Board = () => {
   const [gameHistory, setGameHistory] = useState<string[]>([])
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
+  const [winner, setWinner] = useState('Draw')
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
 
   // Win Condition
@@ -34,18 +31,22 @@ const Board = () => {
     })
 
     if (xWins || oWins) {
-      console.warn('A player won')
       setGameOver((status) => (status = true))
       setModalOpenStatus((status) => (status = true))
+      setWinner((winner) => (winner = prevPlayerTurn))
+    }
+
+    // Draw
+    if (gameHistory.length === 9 && !xWins && !oWins) {
+      setGameOver((status) => (status = true))
+      setModalOpenStatus((status) => (status = true))
+      setWinner((winner) => (winner = 'Draw'))
     }
   }, [gameHistory])
 
   // Game-over
   useEffect(() => {
-    if (gameOver === true) {
-      console.log('Game Over')
-      setModalOpenStatus((status) => (status = true))
-    } else console.log('Continuing....')
+    if (gameOver === true) setModalOpenStatus((status) => (status = true))
   }, [gameOver])
 
   // Shake Screen on False input (CSS)
@@ -102,8 +103,10 @@ const Board = () => {
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
     setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
     setGameHistory((prevArr) => (prevArr = []))
+    setFalseInput((status) => (status = false))
     setGameOver((status) => (status = false))
     setModalOpenStatus((status) => (status = false))
+    setWinner((winner) => (winner = 'Draw'))
 
     // Clear X's and O's rendered on DOM
     const boardMarks = document.querySelectorAll('#player-mark')
@@ -162,45 +165,45 @@ const Board = () => {
         <div className="column_left">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_top"
+            className="square left_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_middle"
+            className="square left_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="left_column_bottom"
+            className="square left_bottom"
           />
         </div>
 
         <div className="column_center">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_top"
+            className="square center_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_middle"
+            className="square center_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="center_column_bottom"
+            className="square center_bottom"
           />
         </div>
 
         <div className="column_right">
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_top"
+            className="square right_top"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_middle"
+            className="square right_middle"
           />
           <Square
             onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="right_column_bottom"
+            className="square right_bottom"
           />
         </div>
       </section>
@@ -212,7 +215,7 @@ const Board = () => {
             setModalOpenStatus(false)
             resetGame()
           }}
-          winner={prevPlayerTurn}
+          winner={winner}
         ></Modal>
       </section>
     </>
