@@ -4,10 +4,7 @@ import Modal from './Modal'
 import './Board.css'
 import { sleep } from '../utils/sleep'
 
-// TODO: Draw condition
-// TODO: Fade Modal in CSS
 // TODO: Bot as player 2?
-// TODO: Footer
 // TODO: unbloat css squares
 
 const Board = () => {
@@ -16,8 +13,8 @@ const Board = () => {
   const [gameHistory, setGameHistory] = useState<string[]>([])
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
-  const [modalOpenStatus, setModalOpenStatus] = useState(false)
   const [winner, setWinner] = useState('Draw')
+  const [modalOpenStatus, setModalOpenStatus] = useState(false)
 
   // Win Condition
   useEffect(() => {

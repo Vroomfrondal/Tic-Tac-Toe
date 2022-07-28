@@ -24,6 +24,20 @@
   padding: 2rem;
   margin: auto;
   z-index: 1000;
+  animation-name: slidein;
+  animation-duration: 0.4s;
+}
+
+@keyframes slidein {
+  from {
+    margin-top: 100%;
+    width: 300%;
+  }
+
+  to {
+    margin-top: 0%;
+    width: 100%;
+  }
 }
 
 .modal_content {
