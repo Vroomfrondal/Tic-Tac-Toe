@@ -1,10 +1,10 @@
-import React, { useState, useEffect, SyntheticEvent } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Square from './Square'
 import Modal from './Modal'
 import './Board.css'
-import { sleep } from '../utils/sleep'
 
-// TODO: Bot as player 2?
+// map <Square> Components
+// Fix Vanilla JavaScript
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
@@ -14,6 +14,8 @@ const Board = () => {
   const [gameOver, setGameOver] = useState(false)
   const [winner, setWinner] = useState('Draw')
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
+
+  const squareInput = useRef('')
 
   // Win Condition
   useEffect(() => {
@@ -67,7 +69,7 @@ const Board = () => {
     [2, 5, 8], // Bottom row
   ]
 
-  const handlePlayerMove = (e: any) => {
+  const handlePlayerMove = (e: React.ChangeEvent<any>) => {
     // Click Validation
     if (
       e.target.innerHTML !== 'X' &&
@@ -90,7 +92,7 @@ const Board = () => {
       // Update Game History & Draw on Board
       setGameHistory((prevArr) => [...prevArr, playerTurn])
       e.target.innerHTML = playerTurn
-      e.target.setAttribute('moveID', gameHistory.length)
+      e.target.setAttribute('moveID', gameHistory.length.toString())
     } else {
       // Enable shake scren class if user clicks occupied <Square>
       const board = document.querySelector('.game_board')
@@ -115,6 +117,7 @@ const Board = () => {
       element.removeAttribute('moveID')
     })
     console.warn(`** Board history cleared **`)
+    console.warn(squareInput.current) // ! test
   }
 
   const undoMove = () => {
@@ -163,48 +166,21 @@ const Board = () => {
         className={falseInput ? 'game_board_when_input_error' : 'game_board'}
       >
         <div className="column_left">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_bottom"
-          />
+          <Square onClick={handlePlayerMove} className="square left_top" />
+          <Square onClick={handlePlayerMove} className="square left_middle" />
+          <Square onClick={handlePlayerMove} className="square left_bottom" />
         </div>
 
         <div className="column_center">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_bottom"
-          />
+          <Square onClick={handlePlayerMove} className="square center_top" />
+          <Square onClick={handlePlayerMove} className="square center_middle" />
+          <Square onClick={handlePlayerMove} className="square center_bottom" />
         </div>
 
         <div className="column_right">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_bottom"
-          />
+          <Square onClick={handlePlayerMove} className="square right_top" />
+          <Square onClick={handlePlayerMove} className="square right_middle" />
+          <Square onClick={handlePlayerMove} className="square right_bottom" />
         </div>
       </section>
 
