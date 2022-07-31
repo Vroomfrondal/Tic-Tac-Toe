@@ -1,23 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Square from './Square'
 import Modal from './Modal'
 import './Board.css'
 
-// map <Square> Components
-// Fix Vanilla JavaScript
+// Map <Square> Components
+// Fix Vanilla JavaScript DOM Manpip
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
-  const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
   const [gameHistory, setGameHistory] = useState<string[]>([])
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const [winner, setWinner] = useState('Draw')
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
 
-  const squareInput = useRef('')
-
-  // Win Condition
+  // Win/Lose/Draw Condition
   useEffect(() => {
     // Return true and update state if any marks on the board match possible winCondition combos
     const boardMarks = document.querySelectorAll('#player-mark')
@@ -35,7 +32,7 @@ const Board = () => {
     if (xWins || oWins) {
       setGameOver((status) => (status = true))
       setModalOpenStatus((status) => (status = true))
-      setWinner((winner) => (winner = prevPlayerTurn))
+      setWinner((winner) => (winner = xWins ? 'X' : 'O'))
     }
 
     // Draw
@@ -46,12 +43,12 @@ const Board = () => {
     }
   }, [gameHistory])
 
-  // Game-over
+  // Game-over Modal
   useEffect(() => {
     if (gameOver === true) setModalOpenStatus((status) => (status = true))
   }, [gameOver])
 
-  // Shake Screen on False input (CSS)
+  // Shake Board on false Square input (CSS)
   useEffect(() => {
     setTimeout(() => {
       setFalseInput(false)
@@ -84,17 +81,12 @@ const Board = () => {
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
         : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
 
-      // Update Previous Player Turn
-      prevPlayerTurn === 'O'
-        ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-        : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-
       // Update Game History & Draw on Board
       setGameHistory((prevArr) => [...prevArr, playerTurn])
       e.target.innerHTML = playerTurn
       e.target.setAttribute('moveID', gameHistory.length.toString())
     } else {
-      // Enable shake scren class if user clicks occupied <Square>
+      // Enable shake screen class if user clicks occupied <Square>
       const board = document.querySelector('.game_board')
       if (board) setFalseInput((status) => (status = true))
     }
@@ -103,12 +95,11 @@ const Board = () => {
   const resetGame = () => {
     // Reset Player and Game History States
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
-    setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
     setGameHistory((prevArr) => (prevArr = []))
     setFalseInput((status) => (status = false))
     setGameOver((status) => (status = false))
-    setModalOpenStatus((status) => (status = false))
     setWinner((winner) => (winner = 'Draw'))
+    setModalOpenStatus((status) => (status = false))
 
     // Clear X's and O's rendered on DOM
     const boardMarks = document.querySelectorAll('#player-mark')
@@ -117,24 +108,16 @@ const Board = () => {
       element.removeAttribute('moveID')
     })
     console.warn(`** Board history cleared **`)
-    console.warn(squareInput.current) // ! test
   }
 
   const undoMove = () => {
     if (gameHistory.length > 0) {
-      setGameOver((status) => (status = false))
-
       // Undo Player Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
         : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
 
-      // Undo Prev Player Turn
-      prevPlayerTurn === 'O'
-        ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-        : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-
-      // Update Game History by filtering last move from array
+      // Update Game History
       setGameHistory((prevArr) =>
         prevArr.filter((move, index) => index !== prevArr.length - 1)
       )

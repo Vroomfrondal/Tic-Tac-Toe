@@ -3,13 +3,13 @@ import './Square.css'
 
 type SquareTypes = {
   className: string
-  children?: string
+  children?: JSX.Element | JSX.Element[]
   onClick: (e: SyntheticEvent<Element, Event>) => void
 }
 
-const Square = ({ className, onClick, children }: SquareTypes) => {
+const Square = ({ className, children, onClick }: SquareTypes) => {
   return (
-    <div id="player-mark" onClick={onClick} className={className}>
+    <div className={className} onClick={onClick} id="player-mark">
       <span>{children}</span>
     </div>
   )
