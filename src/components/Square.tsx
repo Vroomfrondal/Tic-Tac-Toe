@@ -3,15 +3,17 @@ import './Square.css'
 
 type SquareTypes = {
   className: string
-  children?: JSX.Element | JSX.Element[]
   onClick: (e: SyntheticEvent<Element, Event>) => void
+  playerValue: string
 }
 
-const Square = ({ className, children, onClick }: SquareTypes) => {
+const Square = ({ className, onClick, playerValue }: SquareTypes) => {
   return (
-    <div className={className} onClick={onClick} id="player-mark">
-      <span>{children}</span>
-    </div>
+    <>
+      <div className={className} onClick={onClick} id="player-mark">
+        {playerValue}
+      </div>
+    </>
   )
 }
 
