@@ -7,7 +7,8 @@ import './Board.css'
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [winner, setWinner] = useState('Draw')
-  const [gameHistory, setGameHistory] = useState<string[]>([])
+  const [moveHistory, setMoveHistory] = useState<string[]>([])
+  const [undoPicture, setUndoPicture] = useState<string[][]>([])
   const [boardState, setBoardState] = useState(Array(9).fill(null))
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
@@ -35,12 +36,12 @@ const Board = () => {
     }
 
     // Draw
-    if (gameHistory.length === 9 && !xWins && !oWins) {
+    if (moveHistory.length === 9 && !xWins && !oWins) {
       setGameOver((status) => (status = true))
       setModalOpenStatus((status) => (status = true))
       setWinner((winner) => (winner = 'Draw'))
     }
-  }, [gameHistory])
+  }, [moveHistory])
 
   // Game-over Modal
   useEffect(() => {
@@ -54,51 +55,57 @@ const Board = () => {
     }, 1000)
   }, [falseInput])
 
+  // !useEffect(() => {
+  //   console.log(`Board state: ${boardState}`)
+  //   // console.log(undoPicture)
+  // }, [boardState])
+
   const resetGame = () => {
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
     setWinner((winner) => (winner = 'Draw'))
-    setGameHistory((prevArr) => (prevArr = []))
+    setMoveHistory((prevArr) => (prevArr = []))
     setBoardState(() => Array(9).fill(null))
     setFalseInput((status) => (status = false))
     setGameOver((status) => (status = false))
     setModalOpenStatus((status) => (status = false))
+    setUndoPicture((prevArr) => (prevArr = []))
 
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
-    if (gameHistory.length < 9) {
-      // Undo Player Turn
+    if (moveHistory.length >= 1) {
       playerTurn === 'X'
-        ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-        : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+        ? setPlayerTurn((prevTurn) => (prevTurn = 'O'))
+        : setPlayerTurn((prevTurn) => (prevTurn = 'X'))
 
-      // Update Game History
-      setGameHistory((prevArr) =>
+      // Update board state with history array equal to last move
+      for (let i = 0; i < undoPicture.length; i++) {
+        const moveToUndo = moveHistory.length - 2
+        const target = i === moveToUndo
+
+        if (target === true) setBoardState((arr) => (arr = undoPicture[i]))
+      }
+
+      setMoveHistory((prevArr) =>
         prevArr.filter((move, index) => index !== prevArr.length - 1)
       )
-
-      // Find most recently updated DOM Element moveID attribute and remove X or O from board
-      const lastMoveID = gameHistory.length - 1
-      const lastDomMarkOnBoard = Array.from(
-        document.querySelectorAll(`[moveID = "${lastMoveID}"]`)
-      )
-
-      lastDomMarkOnBoard[0].innerHTML = ''
-      lastDomMarkOnBoard[0].removeAttribute('moveID')
     } else console.warn('A player needs to make a move to undo!')
   }
 
   const playGame = (index: number) => {
-    if (boardState[index] !== null && gameHistory.length < 9) {
+    if (boardState[index] !== null && moveHistory.length < 9) {
       const board = document.querySelector('.game_board')
       if (board) setFalseInput((status) => (status = true))
     } else {
+      // Update Board States with move index of square that the player clicked
       boardState[index] = playerTurn
       setBoardState(() => [...boardState])
       setFalseInput((status) => (status = false))
-      setGameHistory((prevArr) => [...prevArr, playerTurn])
+      setMoveHistory((prevArr) => [...prevArr, playerTurn])
+      setUndoPicture((arr) => [...arr, [...boardState]])
 
+      // Update Players Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
         : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
