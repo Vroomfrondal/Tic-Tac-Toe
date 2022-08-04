@@ -4,9 +4,6 @@ import Square from './Square'
 import Modal from './Modal'
 import './Board.css'
 
-//! Bug when undo picture is fully undone it needs reset
-// TODO: Fix Bug above by setting timer after undo move button is set
-
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [winner, setWinner] = useState('Draw')
@@ -35,52 +32,46 @@ const Board = () => {
     })
 
     if (xWins || oWins) {
-      setGameOver((status) => (status = true))
-      setModalOpenStatus((status) => (status = true))
-      setWinner((winner) => (winner = xWins ? 'X' : 'O'))
+      setGameOver(true)
+      setModalOpenStatus(true)
+      setWinner(xWins ? 'X' : 'O')
     }
 
     // Draw
     if (moveHistory.length === 9 && !xWins && !oWins) {
-      setGameOver((status) => (status = true))
-      setModalOpenStatus((status) => (status = true))
-      setWinner((winner) => (winner = 'Draw'))
+      setGameOver(true)
+      setModalOpenStatus(true)
+      setWinner('draw')
     }
   }, [moveHistory])
 
   // Game-over Modal
   useEffect(() => {
-    if (gameOver === true) setModalOpenStatus((status) => (status = true))
+    if (gameOver === true) setModalOpenStatus(true)
   }, [gameOver])
 
-  // Shake Board on false Square input
+  // Shake Board on bad input
   useEffect(() => {
     setTimeout(() => {
       setFalseInput(false)
     }, 1000)
   }, [falseInput])
 
-  // set undoPicture to default if moves cleared by undo
+  // set undoPicture to default when board cleared by undo button
   useEffect(() => {
     if (undoPicture.length === 1)
       setUndoPicture((arr) => (arr = [Array(9).fill(null)]))
   }, [boardState])
 
-  useEffect(() => {
-    console.log(`board state: ` + boardState)
-    undoPicture.forEach((item) => console.log(item))
-    console.log(undoPicture.length)
-  })
-
   const resetGame = () => {
-    setPlayerTurn((prevTurn) => (prevTurn = 'X'))
-    setWinner((winner) => (winner = 'Draw'))
-    setMoveHistory((prevArr) => (prevArr = []))
-    setBoardState(() => Array(9).fill(null))
-    setFalseInput((status) => (status = false))
-    setGameOver((status) => (status = false))
-    setModalOpenStatus((status) => (status = false))
-    setUndoPicture((prevArr) => (prevArr = [Array(9).fill(null)]))
+    setPlayerTurn('X')
+    setWinner('Draw')
+    setMoveHistory([])
+    setBoardState(Array(9).fill(null))
+    setFalseInput(false)
+    setGameOver(false)
+    setModalOpenStatus(false)
+    setUndoPicture([Array(9).fill(null)])
 
     console.warn(`** Board history cleared **`)
   }
@@ -97,9 +88,7 @@ const Board = () => {
           setBoardState((arr) => (arr = undoPicture[i]))
           setUndoPicture((arr) => arr.filter((item) => item !== undoPicture[i]))
 
-          playerTurn === 'X'
-            ? setPlayerTurn((prevTurn) => (prevTurn = 'O'))
-            : setPlayerTurn((prevTurn) => (prevTurn = 'X'))
+          playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
 
           setMoveHistory((arr) =>
             arr.filter((move, index) => index !== arr.length - 1)
@@ -112,18 +101,16 @@ const Board = () => {
   const playGame = (index: number) => {
     if (boardState[index] !== null && moveHistory.length < 9) {
       const board = document.querySelector('.game_board')
-      if (board) setFalseInput((status) => (status = true))
+      if (board) setFalseInput(true)
     } else {
-      // Update Board States with move index of square that the player clicked
+      // Update Board States with index of square clicked
       boardState[index] = playerTurn
       setBoardState(() => [...boardState])
-      setFalseInput((status) => (status = false))
-      setMoveHistory((prevArr) => [...prevArr, playerTurn])
+      setFalseInput(false)
+      setMoveHistory((arr) => [...arr, playerTurn])
       setUndoPicture((arr) => [...arr, [...boardState]])
 
-      playerTurn === 'X'
-        ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-        : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+      playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
     }
   }
 
