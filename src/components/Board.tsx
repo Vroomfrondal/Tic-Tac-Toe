@@ -1,23 +1,24 @@
-import React, { useState, useEffect, SyntheticEvent } from 'react'
+import React, { useState, useEffect } from 'react'
+import winConditions from '../utils/winConditions'
 import Square from './Square'
 import Modal from './Modal'
 import './Board.css'
-import { sleep } from '../utils/sleep'
-
-// TODO: Bot as player 2?
 
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
-  const [prevPlayerTurn, setPrevPlayerTurn] = useState('O')
-  const [gameHistory, setGameHistory] = useState<string[]>([])
+  const [winner, setWinner] = useState('Draw')
+  const [moveHistory, setMoveHistory] = useState<string[]>([])
+  const [boardState, setBoardState] = useState(Array(9).fill(null))
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
-  const [winner, setWinner] = useState('Draw')
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
+  const [undoPicture, setUndoPicture] = useState<string[][]>([
+    Array(9).fill(null),
+  ])
 
-  // Win Condition
+  // Win/Lose/Draw Condition
   useEffect(() => {
-    // Return true and update state if any marks on the board match possible winCondition combos
+    // Return true if any marks on the board match possible winCondition combos on board
     const boardMarks = document.querySelectorAll('#player-mark')
     const xWins = winConditions.some((condition) => {
       return condition.every((index) => {
@@ -31,120 +32,96 @@ const Board = () => {
     })
 
     if (xWins || oWins) {
-      setGameOver((status) => (status = true))
-      setModalOpenStatus((status) => (status = true))
-      setWinner((winner) => (winner = prevPlayerTurn))
+      setGameOver(true)
+      setModalOpenStatus(true)
+      setWinner(xWins ? 'X' : 'O')
     }
 
     // Draw
-    if (gameHistory.length === 9 && !xWins && !oWins) {
-      setGameOver((status) => (status = true))
-      setModalOpenStatus((status) => (status = true))
-      setWinner((winner) => (winner = 'Draw'))
+    if (moveHistory.length === 9 && !xWins && !oWins) {
+      setGameOver(true)
+      setModalOpenStatus(true)
+      setWinner('draw')
     }
-  }, [gameHistory])
+  }, [moveHistory])
 
-  // Game-over
+  // Game-over Modal
   useEffect(() => {
-    if (gameOver === true) setModalOpenStatus((status) => (status = true))
+    if (gameOver === true) setModalOpenStatus(true)
   }, [gameOver])
 
-  // Shake Screen on False input (CSS)
+  // Shake Board on bad input
   useEffect(() => {
     setTimeout(() => {
       setFalseInput(false)
     }, 1000)
   }, [falseInput])
 
-  const winConditions = [
-    [0, 3, 6], // Top row
-    [0, 1, 2], // Left column
-    [0, 4, 8], // Diagonal starting top left
-    [2, 4, 6], // Diagonal starting bottom left
-    [1, 4, 7], // Center row
-    [3, 4, 5], // Center column
-    [6, 7, 8], // Right column
-    [2, 5, 8], // Bottom row
-  ]
-
-  const handlePlayerMove = (e: any) => {
-    // Click Validation
-    if (
-      e.target.innerHTML !== 'X' &&
-      e.target.innerHTML !== 'O' &&
-      gameHistory.length < 9
-    ) {
-      // Turn off shake screen class since we have valid input
-      setFalseInput((status) => (status = false))
-
-      // Update Players Turn
-      playerTurn === 'X'
-        ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-        : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-
-      // Update Previous Player Turn
-      prevPlayerTurn === 'O'
-        ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-        : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-
-      // Update Game History & Draw on Board
-      setGameHistory((prevArr) => [...prevArr, playerTurn])
-      e.target.innerHTML = playerTurn
-      e.target.setAttribute('moveID', gameHistory.length)
-    } else {
-      // Enable shake scren class if user clicks occupied <Square>
-      const board = document.querySelector('.game_board')
-      if (board) setFalseInput((status) => (status = true))
-    }
-  }
+  // set undoPicture to default when board cleared by undo button
+  useEffect(() => {
+    if (undoPicture.length === 1)
+      setUndoPicture((arr) => (arr = [Array(9).fill(null)]))
+  }, [boardState])
 
   const resetGame = () => {
-    // Reset Player and Game History States
-    setPlayerTurn((prevTurn) => (prevTurn = 'X'))
-    setPrevPlayerTurn((prevTurn) => (prevTurn = 'O'))
-    setGameHistory((prevArr) => (prevArr = []))
-    setFalseInput((status) => (status = false))
-    setGameOver((status) => (status = false))
-    setModalOpenStatus((status) => (status = false))
-    setWinner((winner) => (winner = 'Draw'))
+    setPlayerTurn('X')
+    setWinner('Draw')
+    setMoveHistory([])
+    setBoardState(Array(9).fill(null))
+    setFalseInput(false)
+    setGameOver(false)
+    setModalOpenStatus(false)
+    setUndoPicture([Array(9).fill(null)])
 
-    // Clear X's and O's rendered on DOM
-    const boardMarks = document.querySelectorAll('#player-mark')
-    boardMarks.forEach((element) => {
-      element.innerHTML = ''
-      element.removeAttribute('moveID')
-    })
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
-    if (gameHistory.length > 0) {
-      setGameOver((status) => (status = false))
+    if (moveHistory.length > 0) {
+      // Update board state with history array equal to last move
+      for (let i = 0; i < undoPicture.length; i++) {
+        const moveToUndo = moveHistory.length - 1
+        const targetItteration = i === moveToUndo
 
-      // Undo Player Turn
-      playerTurn === 'X'
-        ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
-        : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
+        // Remove last state change from undoPicture
+        if (targetItteration === true) {
+          setBoardState((arr) => (arr = undoPicture[i]))
+          setUndoPicture((arr) => arr.filter((item) => item !== undoPicture[i]))
 
-      // Undo Prev Player Turn
-      prevPlayerTurn === 'O'
-        ? setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
-        : setPrevPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
+          playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
 
-      // Update Game History by filtering last move from array
-      setGameHistory((prevArr) =>
-        prevArr.filter((move, index) => index !== prevArr.length - 1)
-      )
-
-      // Find most recently updated DOM Element moveID attribute and remove X or O from board
-      const lastMoveID = gameHistory.length - 1
-      const lastDomMarkOnBoard = Array.from(
-        document.querySelectorAll(`[moveID = "${lastMoveID}"]`)
-      )
-
-      lastDomMarkOnBoard[0].innerHTML = ''
-      lastDomMarkOnBoard[0].removeAttribute('moveID')
+          setMoveHistory((arr) =>
+            arr.filter((move, index) => index !== arr.length - 1)
+          )
+        }
+      }
     } else console.warn('A player needs to make a move to undo!')
+  }
+
+  const playGame = (index: number) => {
+    if (boardState[index] !== null && moveHistory.length < 9) {
+      const board = document.querySelector('.game_board')
+      if (board) setFalseInput(true)
+    } else {
+      // Update Board States with index of square clicked
+      boardState[index] = playerTurn
+      setBoardState(() => [...boardState])
+      setFalseInput(false)
+      setMoveHistory((arr) => [...arr, playerTurn])
+      setUndoPicture((arr) => [...arr, [...boardState]])
+
+      playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
+    }
+  }
+
+  const renderSquare = (index: number, className: string) => {
+    return (
+      <Square
+        className={className}
+        playerValue={boardState[index]}
+        onClick={() => playGame(index)}
+      />
+    )
   }
 
   return (
@@ -162,49 +139,22 @@ const Board = () => {
       <section
         className={falseInput ? 'game_board_when_input_error' : 'game_board'}
       >
-        <div className="column_left">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square left_bottom"
-          />
+        <div>
+          {renderSquare(0, 'square left_top')}
+          {renderSquare(1, 'square left_middle')}
+          {renderSquare(2, 'square left_bottom')}
         </div>
 
-        <div className="column_center">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square center_bottom"
-          />
+        <div>
+          {renderSquare(3, 'square center_top')}
+          {renderSquare(4, 'square center_middle')}
+          {renderSquare(5, 'square center_bottom')}
         </div>
 
-        <div className="column_right">
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_top"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_middle"
-          />
-          <Square
-            onClick={(e: SyntheticEvent) => handlePlayerMove(e)}
-            className="square right_bottom"
-          />
+        <div>
+          {renderSquare(6, 'square right_top')}
+          {renderSquare(7, 'square right_middle')}
+          {renderSquare(8, 'square right_bottom')}
         </div>
       </section>
 

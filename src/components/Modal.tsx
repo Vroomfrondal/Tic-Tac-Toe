@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import './Modal.css'
 
-function Modal({ open, onClose, winner }: any) {
+type ModalTypes = {
+  open: boolean
+  winner: string
+  onClose: MouseEventHandler<HTMLElement>
+}
+
+function Modal({ open, onClose, winner }: ModalTypes) {
   if (!open) return null
 
   let winMessage: string
-  if (winner === 'X' || winner === 'O') winMessage = `${winner} Wins!`
-  else winMessage = 'Draw!'
+  winner === 'X' || winner === 'O'
+    ? (winMessage = `${winner} Wins!`)
+    : (winMessage = 'Draw!')
 
   return (
     <>

@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import './Square.css'
 
 type SquareTypes = {
   className: string
-  onClick: any
-  children?: string
+  onClick: (e: SyntheticEvent<Element, Event>) => void
+  playerValue: string
 }
 
-const Square = ({ className, onClick, children }: SquareTypes) => {
+const Square = ({ className, onClick, playerValue }: SquareTypes) => {
   return (
-    <div id="player-mark" onClick={onClick} className={className}>
-      <span>{children}</span>
+    <div className={className} onClick={onClick} id="player-mark">
+      {playerValue}
     </div>
   )
 }
