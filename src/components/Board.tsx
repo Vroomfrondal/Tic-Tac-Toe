@@ -4,15 +4,20 @@ import Square from './Square'
 import Modal from './Modal'
 import './Board.css'
 
+//! Bug when undo picture is fully undone it needs reset
+// TODO: Fix Bug above by setting timer after undo move button is set
+
 const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [winner, setWinner] = useState('Draw')
   const [moveHistory, setMoveHistory] = useState<string[]>([])
-  const [undoPicture, setUndoPicture] = useState<string[][]>([])
   const [boardState, setBoardState] = useState(Array(9).fill(null))
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
+  const [undoPicture, setUndoPicture] = useState<string[][]>([
+    Array(9).fill(null),
+  ])
 
   // Win/Lose/Draw Condition
   useEffect(() => {
@@ -55,10 +60,17 @@ const Board = () => {
     }, 1000)
   }, [falseInput])
 
-  // !useEffect(() => {
-  //   console.log(`Board state: ${boardState}`)
-  //   // console.log(undoPicture)
-  // }, [boardState])
+  // set undoPicture to default if moves cleared by undo
+  useEffect(() => {
+    if (undoPicture.length === 1)
+      setUndoPicture((arr) => (arr = [Array(9).fill(null)]))
+  }, [boardState])
+
+  useEffect(() => {
+    console.log(`board state: ` + boardState)
+    undoPicture.forEach((item) => console.log(item))
+    console.log(undoPicture.length)
+  })
 
   const resetGame = () => {
     setPlayerTurn((prevTurn) => (prevTurn = 'X'))
@@ -68,28 +80,32 @@ const Board = () => {
     setFalseInput((status) => (status = false))
     setGameOver((status) => (status = false))
     setModalOpenStatus((status) => (status = false))
-    setUndoPicture((prevArr) => (prevArr = []))
+    setUndoPicture((prevArr) => (prevArr = [Array(9).fill(null)]))
 
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
-    if (moveHistory.length >= 1) {
-      playerTurn === 'X'
-        ? setPlayerTurn((prevTurn) => (prevTurn = 'O'))
-        : setPlayerTurn((prevTurn) => (prevTurn = 'X'))
-
+    if (moveHistory.length > 0) {
       // Update board state with history array equal to last move
       for (let i = 0; i < undoPicture.length; i++) {
-        const moveToUndo = moveHistory.length - 2
-        const target = i === moveToUndo
+        const moveToUndo = moveHistory.length - 1
+        const targetItteration = i === moveToUndo
 
-        if (target === true) setBoardState((arr) => (arr = undoPicture[i]))
+        // Remove last state change from undoPicture
+        if (targetItteration === true) {
+          setBoardState((arr) => (arr = undoPicture[i]))
+          setUndoPicture((arr) => arr.filter((item) => item !== undoPicture[i]))
+
+          playerTurn === 'X'
+            ? setPlayerTurn((prevTurn) => (prevTurn = 'O'))
+            : setPlayerTurn((prevTurn) => (prevTurn = 'X'))
+
+          setMoveHistory((arr) =>
+            arr.filter((move, index) => index !== arr.length - 1)
+          )
+        }
       }
-
-      setMoveHistory((prevArr) =>
-        prevArr.filter((move, index) => index !== prevArr.length - 1)
-      )
     } else console.warn('A player needs to make a move to undo!')
   }
 
@@ -105,7 +121,6 @@ const Board = () => {
       setMoveHistory((prevArr) => [...prevArr, playerTurn])
       setUndoPicture((arr) => [...arr, [...boardState]])
 
-      // Update Players Turn
       playerTurn === 'X'
         ? setPlayerTurn((prevTurn: string) => (prevTurn = 'O'))
         : setPlayerTurn((prevTurn: string) => (prevTurn = 'X'))
