@@ -9,11 +9,9 @@ type SquareTypes = {
 
 const Square = ({ className, onClick, playerValue }: SquareTypes) => {
   return (
-    <>
-      <div className={className} onClick={onClick} id="player-mark">
-        {playerValue}
-      </div>
-    </>
+    <div className={className} onClick={onClick} id="player-mark">
+      {playerValue}
+    </div>
   )
 }
 

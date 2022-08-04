@@ -5,8 +5,10 @@ import Board from './Board'
 function App() {
   return (
     <>
-      <Header />
-      <Board />
+      <React.StrictMode>
+        <Header />
+        <Board />
+      </React.StrictMode>
     </>
   )
 }
