@@ -37,7 +37,6 @@ const Board = () => {
       setWinner(xWins ? 'X' : 'O')
     }
 
-    // Draw
     if (moveHistory.length === 9 && !xWins && !oWins) {
       setGameOver(true)
       setModalOpenStatus(true)
@@ -59,8 +58,7 @@ const Board = () => {
 
   // set undoPicture to default when board cleared by undo button
   useEffect(() => {
-    if (undoPicture.length === 1)
-      setUndoPicture((arr) => (arr = [Array(9).fill(null)]))
+    if (undoPicture.length === 1) setUndoPicture([Array(9).fill(null)])
   }, [boardState])
 
   const resetGame = () => {
@@ -78,23 +76,25 @@ const Board = () => {
 
   const undoMove = () => {
     if (moveHistory.length > 0) {
-      // Update board state with history array equal to last move
-      for (let i = 0; i < undoPicture.length; i++) {
+      // Update board state with undoPicture equal to last move
+      undoPicture.forEach((_, index) => {
         const moveToUndo = moveHistory.length - 1
-        const targetItteration = i === moveToUndo
+        const targetItteration = index === moveToUndo
 
-        // Remove last state change from undoPicture
-        if (targetItteration === true) {
-          setBoardState((arr) => (arr = undoPicture[i]))
-          setUndoPicture((arr) => arr.filter((item) => item !== undoPicture[i]))
+        // Remove last move from undoPicture, playerTurn, and moveHistory
+        if (targetItteration) {
+          setBoardState(undoPicture[index])
+          setUndoPicture((arr) =>
+            arr.filter((item) => item !== undoPicture[index])
+          )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
 
           setMoveHistory((arr) =>
-            arr.filter((move, index) => index !== arr.length - 1)
+            arr.filter((_, index) => index !== arr.length - 1)
           )
         }
-      }
+      })
     } else console.warn('A player needs to make a move to undo!')
   }
 
@@ -105,7 +105,7 @@ const Board = () => {
     } else {
       // Update Board States with index of square clicked
       boardState[index] = playerTurn
-      setBoardState(() => [...boardState])
+      setBoardState([...boardState])
       setFalseInput(false)
       setMoveHistory((arr) => [...arr, playerTurn])
       setUndoPicture((arr) => [...arr, [...boardState]])
