@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import winConditions from '../utils/winConditions'
 import Square from './Square'
 import Modal from './Modal'
+import playSound from '../utils/playClickSound'
+import playerMoveSound from '../assets/playerMove.mp3'
+import buttonClickSound from '../assets/buttonClick.mp3'
 import './Board.css'
 
 const Board = () => {
@@ -71,17 +74,18 @@ const Board = () => {
     setModalOpenStatus(false)
     setUndoPicture([Array(9).fill(null)])
 
+    playSound(buttonClickSound)
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
     if (moveHistory.length > 0) {
-      // Update board state with undoPicture equal to last move
+      // Update board with most recent picture and remove that picture from array
       undoPicture.forEach((_, index) => {
         const moveToUndo = moveHistory.length - 1
         const targetItteration = index === moveToUndo
 
-        // Remove last move from undoPicture, playerTurn, and moveHistory
+        // Remove last move from undoPicture
         if (targetItteration) {
           setBoardState(undoPicture[index])
           setUndoPicture((arr) =>
@@ -89,6 +93,7 @@ const Board = () => {
           )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
+          playSound(buttonClickSound)
 
           setMoveHistory((arr) =>
             arr.filter((_, index) => index !== arr.length - 1)
@@ -111,6 +116,7 @@ const Board = () => {
       setUndoPicture((arr) => [...arr, [...boardState]])
 
       playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
+      playSound(playerMoveSound)
     }
   }
 
