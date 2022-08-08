@@ -80,20 +80,20 @@ const Board = () => {
 
   const undoMove = () => {
     if (moveHistory.length > 0) {
-      // Update board with most recent picture and remove that picture from array
+      // Find most recently added move in undoPicture array
       undoPicture.forEach((_, index) => {
         const moveToUndo = moveHistory.length - 1
         const targetItteration = index === moveToUndo
 
-        // Remove last move from undoPicture
+        // update the state and pop or "undo" move from undoPicture
         if (targetItteration) {
-          setBoardState(undoPicture[index])
+          playSound(buttonClickSound)
+          setBoardState([...undoPicture[index]])
           setUndoPicture((arr) =>
-            arr.filter((item) => item !== undoPicture[index])
+            arr.filter((item) => item !== undoPicture[undoPicture.length - 1])
           )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
-          playSound(buttonClickSound)
 
           setMoveHistory((arr) =>
             arr.filter((_, index) => index !== arr.length - 1)
