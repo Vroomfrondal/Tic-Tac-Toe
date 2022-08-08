@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import winConditions from '../utils/winConditions'
 import Square from './Square'
 import Modal from './Modal'
+import playSound from '../utils/playClickSound'
+import playerMoveSound from '../assets/playerMove.mp3'
+import buttonClickSound from '../assets/buttonClick.mp3'
 import './Board.css'
 
 const Board = () => {
@@ -37,7 +40,6 @@ const Board = () => {
       setWinner(xWins ? 'X' : 'O')
     }
 
-    // Draw
     if (moveHistory.length === 9 && !xWins && !oWins) {
       setGameOver(true)
       setModalOpenStatus(true)
@@ -59,8 +61,7 @@ const Board = () => {
 
   // set undoPicture to default when board cleared by undo button
   useEffect(() => {
-    if (undoPicture.length === 1)
-      setUndoPicture((arr) => (arr = [Array(9).fill(null)]))
+    if (undoPicture.length === 1) setUndoPicture([Array(9).fill(null)])
   }, [boardState])
 
   const resetGame = () => {
@@ -73,28 +74,32 @@ const Board = () => {
     setModalOpenStatus(false)
     setUndoPicture([Array(9).fill(null)])
 
+    playSound(buttonClickSound)
     console.warn(`** Board history cleared **`)
   }
 
   const undoMove = () => {
     if (moveHistory.length > 0) {
-      // Update board state with history array equal to last move
-      for (let i = 0; i < undoPicture.length; i++) {
+      // Find most recently added move in undoPicture array
+      undoPicture.forEach((_, index) => {
         const moveToUndo = moveHistory.length - 1
-        const targetItteration = i === moveToUndo
+        const targetItteration = index === moveToUndo
 
-        // Remove last state change from undoPicture
-        if (targetItteration === true) {
-          setBoardState((arr) => (arr = undoPicture[i]))
-          setUndoPicture((arr) => arr.filter((item) => item !== undoPicture[i]))
+        // update the state and pop or "undo" move from undoPicture
+        if (targetItteration) {
+          playSound(buttonClickSound)
+          setBoardState([...undoPicture[index]])
+          setUndoPicture((arr) =>
+            arr.filter((item) => item !== undoPicture[undoPicture.length - 1])
+          )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
 
           setMoveHistory((arr) =>
-            arr.filter((move, index) => index !== arr.length - 1)
+            arr.filter((_, index) => index !== arr.length - 1)
           )
         }
-      }
+      })
     } else console.warn('A player needs to make a move to undo!')
   }
 
@@ -105,12 +110,13 @@ const Board = () => {
     } else {
       // Update Board States with index of square clicked
       boardState[index] = playerTurn
-      setBoardState(() => [...boardState])
+      setBoardState([...boardState])
       setFalseInput(false)
       setMoveHistory((arr) => [...arr, playerTurn])
       setUndoPicture((arr) => [...arr, [...boardState]])
 
       playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
+      playSound(playerMoveSound)
     }
   }
 
