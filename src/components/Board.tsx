@@ -21,26 +21,20 @@ const Board = () => {
 
   // Win/Lose/Draw Condition
   useEffect(() => {
-    // Return true if any marks on the board match possible winCondition combos on board
+    // Return true if any marks on the board match a possible winCondition combo
     const boardMarks = document.querySelectorAll('#player-mark')
-    const xWins = winConditions.some((condition) => {
-      return condition.every((index) => {
-        return boardMarks[index].innerHTML === 'X'
-      })
-    })
-    const oWins = winConditions.some((condition) => {
-      return condition.every((index) => {
-        return boardMarks[index].innerHTML === 'O'
-      })
-    })
+    const xWins = winConditions.some((condition) =>
+      condition.every((index) => boardMarks[index].innerHTML === 'X')
+    )
+    const oWins = winConditions.some((condition) =>
+      condition.every((index) => boardMarks[index].innerHTML === 'O')
+    )
 
     if (xWins || oWins) {
       setGameOver(true)
       setModalOpenStatus(true)
       setWinner(xWins ? 'X' : 'O')
-    }
-
-    if (moveHistory.length === 9 && !xWins && !oWins) {
+    } else if (moveHistory.length === 9 && !xWins && !oWins) {
       setGameOver(true)
       setModalOpenStatus(true)
       setWinner('draw')
@@ -83,17 +77,16 @@ const Board = () => {
       // Find most recently added move in undoPicture array
       undoPicture.forEach((_, index) => {
         const moveToUndo = moveHistory.length - 1
-        const targetItteration = index === moveToUndo
 
-        // update the state and pop or "undo" move from undoPicture
-        if (targetItteration) {
-          playSound(buttonClickSound)
+        // update the state and pop move from undoPicture
+        if (index === moveToUndo) {
           setBoardState([...undoPicture[index]])
           setUndoPicture((arr) =>
             arr.filter((item) => item !== undoPicture[undoPicture.length - 1])
           )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
+          playSound(buttonClickSound)
 
           setMoveHistory((arr) =>
             arr.filter((_, index) => index !== arr.length - 1)
