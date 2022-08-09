@@ -1,11 +1,6 @@
-import React, { MouseEventHandler } from 'react'
+import React from 'react'
+import { ModalTypes } from '../typings'
 import './Modal.css'
-
-type ModalTypes = {
-  open: boolean
-  winner: string
-  onClose: MouseEventHandler<HTMLElement>
-}
 
 function Modal({ open, onClose, winner }: ModalTypes) {
   if (!open) return null
