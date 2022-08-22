@@ -93,7 +93,7 @@
 }
 
 /* Mobile-Device viewport */
-@media (min-width: 100px) and (max-width: 619px) {
+@media (min-width: 100px) and (max-width: 777px) {
   .game_header {
     padding-top: 6rem;
   }

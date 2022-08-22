@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react'
 import winConditions from '../utils/winConditions'
 import Square from './Square'
 import Modal from './Modal'
-import playSound from '../utils/playClickSound'
-import playerMoveSound from '../assets/playerMove.mp3'
-import buttonClickSound from '../assets/buttonClick.mp3'
 import './Board.css'
 
 const Board = () => {
@@ -67,8 +64,6 @@ const Board = () => {
     setGameOver(false)
     setModalOpenStatus(false)
     setUndoPicture([Array(9).fill(null)])
-
-    playSound(buttonClickSound)
     console.warn(`** Board history cleared **`)
   }
 
@@ -86,7 +81,6 @@ const Board = () => {
           )
 
           playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
-          playSound(buttonClickSound)
 
           setMoveHistory((arr) =>
             arr.filter((_, index) => index !== arr.length - 1)
@@ -109,7 +103,6 @@ const Board = () => {
       setUndoPicture((arr) => [...arr, [...boardState]])
 
       playerTurn === 'X' ? setPlayerTurn('O') : setPlayerTurn('X')
-      playSound(playerMoveSound)
     }
   }
 
