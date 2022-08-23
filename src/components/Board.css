@@ -56,6 +56,24 @@
   color: #fff;
 }
 
+.undoHistory_dom_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pick_undo_button {
+  border: 1px solid black;
+  color: black;
+  background-color: white;
+  display: flex;
+  margin: 0rem 0.2rem 0rem 0.2rem;
+  padding: 0.2rem;
+  justify-content: space-between;
+  width: 1rem;
+  text-align: center;
+}
+
 @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);

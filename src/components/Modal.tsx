@@ -12,10 +12,7 @@ function Modal({ open, onClose, winner }: ModalTypes) {
 
   return (
     <>
-      <div
-        onClick={onClose}
-        className="blackout_background_modal_container"
-      ></div>
+      <div className="blackout_background_modal_container"></div>
 
       <div className="modal">
         <section className="modal_content">
