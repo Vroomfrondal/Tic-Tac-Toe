@@ -8,12 +8,12 @@ const Board = () => {
   const [playerTurn, setPlayerTurn] = useState('X')
   const [winner, setWinner] = useState('Draw')
   const [moveHistory, setMoveHistory] = useState<string[]>([])
+  const [moveHistoryPicture, setMoveHistoryPicture] = useState<string[][]>([])
   const [boardState, setBoardState] = useState(Array(9).fill(null))
   const [falseInput, setFalseInput] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const [modalOpenStatus, setModalOpenStatus] = useState(false)
   const [undoPicture, setUndoPicture] = useState<string[][]>([Array(9).fill(null)])
-  const [moveHistoryPicture, setMoveHistoryPicture] = useState<string[][]>([])
 
   // Win/Lose/Draw Condition
   useEffect(() => {
@@ -136,18 +136,18 @@ const Board = () => {
   const undoToSpecificHistory = (target: number) => {
     if (moveHistory.length > 0) {
       undoPicture.forEach((_, index) => {
-        if (index === target) {
+        if (index === target && index !== moveHistory.length) {
+          // Dynamically update the players position for undo
+          if (index % 2 === 0) setPlayerTurn('X')
+          else setPlayerTurn('O')
+
           // Filter out all moves clicked after the move the user wants to undo to
           setBoardState([...undoPicture[target]])
           setUndoPicture((arr) => arr.filter((items) => items <= undoPicture[target]))
           setMoveHistory(moveHistoryPicture[index + 1])
-
-          // Dynamically update the players position for undo
-          if (index === moveHistory.length - 1)
-            setPlayerTurn(() => ((moveHistory.length - 1) % 2 === 0 ? 'X' : 'O'))
         }
       })
-    }
+    } else console.warn('cant remove current move')
   }
 
   const UndoHistoryButton = ({ index }: any) => {
@@ -179,7 +179,7 @@ const Board = () => {
 
       <section>
         <div className="undoHistory_dom_container">
-          <div>Return to move:</div>
+          <div className="message">Return to move:</div>
           {undoPicture.map((_, index) => (
             <UndoHistoryButton key={index} index={index} />
           ))}

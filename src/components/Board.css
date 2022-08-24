@@ -60,18 +60,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 0.3rem;
 }
 
 .pick_undo_button {
+  display: flex;
+  justify-content: space-between;
+  margin: 0rem 0.2rem 0rem 0.2rem;
+  padding: 0.2rem;
+  width: 1rem;
   border: 1px solid black;
   color: black;
   background-color: white;
-  display: flex;
-  margin: 0rem 0.2rem 0rem 0.2rem;
-  padding: 0.2rem;
-  justify-content: space-between;
-  width: 1rem;
-  text-align: center;
+}
+
+.message {
+  color: #fff;
 }
 
 @keyframes shake {
