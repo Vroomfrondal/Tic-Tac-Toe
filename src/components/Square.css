@@ -53,7 +53,7 @@
 }
 
 /* Mobile-Device viewport */
-@media (min-width: 100px) and (max-width: 619px) {
+@media (min-width: 100px) and (max-width: 777px) {
   .square {
     height: 120px;
     width: 120px;
