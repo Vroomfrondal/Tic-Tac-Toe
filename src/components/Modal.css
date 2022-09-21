@@ -1,0 +1,75 @@
+.blackout_background_modal_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  min-width: 20rem;
+  max-width: 26rem;
+  transform: translate(-50%, -50%);
+  background-color: #3a486e;
+  border: 7px solid #5f86ad;
+  padding: 2rem;
+  margin: auto;
+  z-index: 1000;
+  animation-name: slidein;
+  animation-duration: 0.4s;
+}
+
+@keyframes slidein {
+  from {
+    margin-top: 100%;
+    min-width: 20rem;
+    max-width: 26rem;
+  }
+
+  to {
+    margin-top: 0%;
+    min-width: 20rem;
+    max-width: 26rem;
+  }
+}
+
+.modal_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #fff;
+  margin: 1rem;
+}
+
+.modal_reset_button {
+  font-size: 1.2rem;
+  position: absolute;
+  top: 10px;
+}
+
+.modal_reset_button:hover {
+  box-shadow: 0px 2px 10px 5px #9bb3ce;
+  transition: 0.5s ease;
+}
+
+.winner_text {
+  padding-top: 2.5rem;
+  font-size: 3rem;
+}
+
+/* Mobile-Device viewport */
+@media (min-width: 100px) and (max-width: 619px) {
+  .modal {
+    width: 10rem;
+  }
+}
