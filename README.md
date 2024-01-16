@@ -1,7 +1,5 @@
 # Tic Tac Toe
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/f9038247-5d90-470f-bc63-163d637a2f91/deploy-status)](https://app.netlify.com/sites/topher-tictactoe/deploys)
-
 ### Technologies used:
 
 - Typescript
